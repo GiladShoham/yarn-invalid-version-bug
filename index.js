@@ -31,11 +31,11 @@ async function computeConfiguration(rootDirPath) {
   return config;
 }
 
-async function resolveVersion(packageName){
+async function resolveVersion(packageName, requestedRange){
   const [_NpmRemapResolver, NpmSemverResolver, NpmTagResolver] = npmPlugin.default.resolvers;
   let resolver = new NpmSemverResolver();
   const ident = structUtils.parseIdent(packageName);
-  let range = 'npm:*';
+  let range = `npm:${requestedRange || '*'}`;
   const rootDirPath = process.cwd();
   const config = await computeConfiguration(rootDirPath);
   const project = new Project(rootDirPath, { configuration: config });
@@ -49,7 +49,7 @@ async function resolveVersion(packageName){
   return candidates
 }
 
-resolveVersion('@babel/plugin-proposal-class-properties').then(res => {
+resolveVersion('graphql-type-json', '^0.3.0').then(res => {
   console.log('res')
   console.log(res)
 }).catch(e => {
